@@ -11,5 +11,9 @@
     "jsonp"
   ],
   "author": "Darcy Murphy",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "qs": "^2.2.0",
+    "underscore": "^1.7.0"
+  }
 }
