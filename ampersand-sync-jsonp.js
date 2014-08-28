@@ -24,7 +24,7 @@ module.exports = function (method, model, options) {
     }, config.params));
 
     function cleanup() {
-        if (script.parentNode) {
+        if (script && script.parentNode) {
             script.parentNode.removeChild(script);
         }
     }
@@ -53,7 +53,8 @@ module.exports = function (method, model, options) {
     }
 
     options.id = id;
-    
+
+    script.id = id;
     script.src = config.baseUrl + options.url + '?' + params;
 
     window.__jsonp[id] = (function(success){
@@ -69,6 +70,10 @@ module.exports = function (method, model, options) {
 
     model.trigger('request', model, script, options);
 
-    return script
+    return {
+      cleanup: cleanup,
+      id: id,
+      script: script
+    }
 
 };

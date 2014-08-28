@@ -21,17 +21,22 @@ test('creates `window.__jsonp`', function (t) {
     t.ok(window.__jsonp, '`window.__jsonp` exists');
 });
 
-test('returns `script` tag when called', function (t) {
-    t.plan(1);
-    var script = sync('read', getStub());
-    t.equal(script.nodeName, 'SCRIPT')
+test('returns object describing request', function (t) {
+    t.plan(4);
+    var request = sync('read', getStub());
+    t.equal(typeof request, 'object');
+    t.equal(typeof request.cleanup, 'function')
+    t.equal(request.script.nodeName, 'SCRIPT');
+    t.equal(request.id.lastIndexOf('jsonp_'), 0)
 });
 
-// test('injects script tag into head tag', function (t) {
-//     t.plan(1);
-//     var script = sync('read', getStub());
-//     document.getElementsByTagName('head')[0]
-// });
+test('injects script tag into head tag', function (t) {
+    t.plan(2);
+    var request = sync('read', getStub());
+    var script = document.getElementById(request.id);
+    t.ok(script, 'script in document');
+    t.equal(script, request.script);
+});
 
 test('triggers `request` event on Model', function (t) {
     t.plan(4);
@@ -45,4 +50,11 @@ test('triggers `request` event on Model', function (t) {
       t.end();
     });
     sync('read', m);
+});
+
+test('throws urlError', function (t) {
+    t.throws(function () {
+        sync('read', {});
+    }, Error);
+    t.end();
 });
