@@ -30,7 +30,7 @@ module.exports = function (method, model, options) {
     }
 
     if (window.app) {
-        config = app.jsonpConfig
+        config = app.jsonpConfig || {}
     }
 
     if (!options) {
